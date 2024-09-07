@@ -1,0 +1,41 @@
+[package]
+name = "decaf"
+version = "0.0.1"
+authors = [
+    "The Decaf Project Developers",
+    "William Abney <weebney@freeassn.org>",
+]
+license = "MIT OR Apache-2.0"
+readme = "readme.md"
+repository = "https://github.com/weebney/decaf"
+documentation = "https://docs.rs/decaf"
+homepage = "https://github.com/weebney/decaf"
+description = """
+The Deterministic Compressed Archive Format (DeCAF)
+"""
+categories = ["compression", "filesystem"]
+edition = "2021"
+
+[workspace]
+members = ["decaf-capi", "decaf-cli", "decaf-nostd"]
+
+[[test]]
+path = "tests/lib.rs"
+name = "integration"
+
+[profile.release]
+strip = true
+overflow-checks = true
+lto = true
+
+[profile.dev]
+opt-level = 3
+debug = true
+
+[profile.test]
+opt-level = 3
+debug = true
+
+[dependencies]
+crc32fast = "1.4.2"
+zstd = "0.13.2"

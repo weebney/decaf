@@ -1,0 +1,22 @@
+[package]
+name = "libdecaf"
+version = "0.0.1"
+authors = ["The DeCAF Project Developers"]
+license = "MIT OR Apache-2.0"
+readme = "readme.md"
+repository = "https://github.com/weebney/decaf"
+documentation = "https://github.com/rust-lang/regex/tree/master/regex-capi"
+homepage = "https://github.com/weebney/decaf"
+description = """
+The C API for DeCAF
+"""
+workspace = ".."
+edition = "2018"
+
+[lib]
+name = "libdecaf"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+libc = "0.2"
+decaf = { version = "0", path = ".." }
