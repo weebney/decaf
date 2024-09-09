@@ -1,6 +1,20 @@
 [package]
-name = "decaf-cli"
+name = "df"
 version = "0.1.0"
+authors = [
+    "The DeCAF Project Developers",
+    "William Abney <weebney@freeassn.org>",
+]
+license = "MIT OR Apache-2.0 OR BSD-2-Clause"
+readme = "readme.md"
+repository = "https://github.com/weebney/decaf/decaf-cli"
+documentation = "https://github.com/weebney/decaf/decaf-cli"
+homepage = "https://github.com/weebney/decaf"
+description = """
+The Deterministic Compressed Archive Format (DeCAF) command-line interface
+"""
+categories = ["compression", "filesystem"]
 edition = "2021"
 
 [dependencies]
+decaf = { path = "..", version = "0" }

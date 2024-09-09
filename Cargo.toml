@@ -2,14 +2,14 @@
 name = "decaf"
 version = "0.0.1"
 authors = [
-    "The Decaf Project Developers",
+    "The DeCAF Project Developers",
     "William Abney <weebney@freeassn.org>",
 ]
 license = "MIT OR Apache-2.0"
 readme = "readme.md"
-repository = "https://github.com/weebney/decaf"
+repository = "https://github.com/decafwg/decaf"
 documentation = "https://docs.rs/decaf"
-homepage = "https://github.com/weebney/decaf"
+homepage = "https://github.com/decafwg/decaf"
 description = """
 The Deterministic Compressed Archive Format (DeCAF)
 """
@@ -17,11 +17,11 @@ categories = ["compression", "filesystem"]
 edition = "2021"
 
 [workspace]
-members = ["decaf-capi", "decaf-cli", "decaf-nostd"]
+members = [ "decaf-capi","decaf-cli", "decaf-tar"]
 
-[[test]]
-path = "tests/lib.rs"
-name = "integration"
+[lib]
+name = "decaf"
+path = "decaf/decaf.rs"
 
 [profile.release]
 strip = true
@@ -37,5 +37,11 @@ opt-level = 3
 debug = true
 
 [dependencies]
-crc32fast = "1.4.2"
 zstd = "0.13.2"
+
+[dependencies.xxhash-rust]
+version = "0.8.12"
+features = ["xxh3"]
+
+[dev-dependencies]
+tempfile = "3.12.0"
