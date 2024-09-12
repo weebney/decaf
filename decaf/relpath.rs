@@ -11,6 +11,8 @@
 // Adapted from rustc's path_relative_from
 // https://github.com/rust-lang/rust/blob/e1d0de82cc40b666b88d4a6d2c9dcbc81d7ed27f/src/librustc_back/rpath.rs#L116-L158
 
+// Adapted from https://github.com/Manishearth/pathdiff
+
 use std::path::*;
 
 pub fn relative_path_from<P, B>(path: P, base: B) -> Option<PathBuf>

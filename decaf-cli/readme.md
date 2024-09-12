@@ -2,8 +2,6 @@
 
 ## TAR Mode
 
-The DeCAF command line utility can also be used as a drop in replacement for the `tar` command to produce deterministic tarballs (compatible with bsdtar) ~5x faster than the `tar` utility.
+The DeCAF command line utility can also be used as a drop in replacement for the `tar` command to produce deterministic POSIX-compliant tarballs ~2x faster than GNU `tar`. Just prepend `dar` to the `tar` command you want to run.
 
-Just prepend `df` to the `tar` command you want to run.
-
-`df tar -czvf`
+`dar tar -czvf`

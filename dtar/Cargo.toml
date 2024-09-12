@@ -1,20 +1,25 @@
 [package]
-name = "dar"
-version = "0.1.0"
+name = "dtar"
+version = "1.0.0"
 authors = [
     "The DeCAF Project Developers",
     "William Abney <weebney@freeassn.org>",
 ]
 license = "MIT OR Apache-2.0 OR BSD-2-Clause"
 readme = "readme.md"
-repository = "https://github.com/weebney/decaf/decaf-cli"
-documentation = "https://github.com/weebney/decaf/decaf-cli"
+repository = "https://github.com/weebney/decaf/decaf-tar"
+documentation = "https://github.com/weebney/decaf/decaf-tar"
 homepage = "https://github.com/weebney/decaf"
 description = """
-The Deterministic Compressed Archive Format (DeCAF) command-line interface
+Deterministic POSIX tar (ustar) archiver
 """
 categories = ["compression", "filesystem"]
 edition = "2021"
 
+[lib]
+path = "src/dtar.rs"
+
 [dependencies]
-decaf = { path = "..", version = "0" }
+decaf = { version = "0.0.1", path = ".." }
+flate2 = "1.0.33"
+tar = "0.4.41"

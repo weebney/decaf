@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     draft-rfcxml-general-template-standard-00
+
+     This template includes examples of the most commonly used features of RFCXML with comments
+     explaining how to customise them. This template can be quickly turned into an I-D by editing
+     the examples provided. Look for [REPLACE], [REPLACE/DELETE], [CHECK] and edit accordingly.
+     Note - 'DELETE' means delete the element or attribute, not just the contents.
+
+     Documentation is at https://authors.ietf.org/en/templates-and-schemas
+-->
+<?xml-model href="rfc7991bis.rnc"?>  <!-- Required for schema validation and schema-aware editing -->
+<!-- <?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?> -->
+<!-- This third-party XSLT can be enabled for direct transformations in XML processors, including most browsers -->
+
+
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+<!-- If further character entities are required then they should be added to the DOCTYPE above.
+     Use of an external entity file is not recommended. -->
+
+<rfc
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  category="info"
+  docName="draft-abney-decaf-00"
+  ipr="trust200902"
+  obsoletes=""
+  updates=""
+  submissionType="IETF"
+  xml:lang="en"
+  version="3">
+<!-- [REPLACE]
+       * docName with name of your draft
+     [CHECK]
+       * category should be one of std, bcp, info, exp, historic
+       * ipr should be one of trust200902, noModificationTrust200902, noDerivativesTrust200902, pre5378Trust200902
+       * updates can be an RFC number as NNNN
+       * obsoletes can be an RFC number as NNNN
+-->
+
+  <front>
+    <title abbrev="DeCAF Specification">The Deterministic Compressed Archive Format (DeCAF) Specification and application/decaf Media Type</title>
+    <!--  [REPLACE/DELETE] abbrev. The abbreviated title is required if the full title is longer than 39 characters -->
+
+    <seriesInfo name="Internet-Draft" value="draft-abney-decaf-00"/>
+
+    <author fullname="William H. Abney" initials="W. H." role="editor" surname="Abney">
+      <!-- [CHECK]
+             * initials should not include an initial for the surname
+             * role="editor" is optional -->
+    <!-- Can have more than one author -->
+
+    <!-- all of the following elements are optional -->
+      <organization>Arizona State University</organization>
+      <address>
+        <!-- <postal>
+           Reorder these if your country does things differently
+          <street>Street [REPLACE/DELETE]</street>
+          <city>City [REPLACE/DELETE]</city>
+          <region>Region [REPLACE/DELETE]</region>
+          <code>Postal code [REPLACE/DELETE]</code>
+          <country>Country [REPLACE/DELETE]</country>
+           Uses two letter country code
+        </postal>
+        <phone>Phone [REPLACE/DELETE]</phone> -->
+        <email>weebney@gmail.com</email>
+        <!-- Can have more than one <email> element
+        <uri>URI [REPLACE/DELETE]</uri> -->
+      </address>
+    </author>
+
+    <date year="2024"/>
+    <!-- On draft subbmission:
+         * If only the current year is specified, the current day and month will be used.
+         * If the month and year are both specified and are the current ones, the current day will
+           be used
+         * If the year is not the current one, it is necessary to specify at least a month and day="1" will be used.
+    -->
+
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <!-- "Internet Engineering Task Force" is fine for individual submissions.  If this element is
+          not present, the default is "Network Working Group", which is used by the RFC Editor as
+          a nod to the history of the RFC Series. -->
+
+    <keyword>keyword</keyword>
+    <!-- [REPLACE/DELETE]. Multiple allowed.  Keywords are incorporated into HTML output files for
+         use by search engines. -->
+
+    <abstract>
+      <t>
+      The Deterministic Compressed Archive Format (DeCAF) is an archive file format (e.g. TAR) which produces archives that are inherently reproducible in an environment agnostic manner; one set of files will always produce in an identical archive on any computer. Conversely, any DeCAF archive can only reproduce one set of files. This behavior has wide-reaching implications for the software supply chain, where independently verifiable reproducible artifacts have become an important deterrent to supply chain attacks.
+      </t>
+    </abstract>
+
+  </front>
+
+  <middle>
+
+    <section>
+      <name>Introduction</name>
+      <t>There are hundreds of archive file formats, all of which provide different features. Ultimately, though, they all provide the same utility; take some files and put them into a more portable format.</t>
+
+      <section>
+        <name>Objectives</name>
+
+        <t>The objectives for DeCAF, roughly in decreasing order of importance, are as follows:</t>
+
+        <ol>
+            <li>
+                <t>The format must provide full reproducibility in both directions on any computer, forever.</t>
+            </li>
+        </ol>
+        <t>Providing inherent reproducibility is a difficult balancing act. The format seeks to provide bit-perfect reproducibility on any processor architecture, operating system, filesystem, etc.</t>
+
+        <ol>
+            <li>
+                <t>The format should lack complexity</t>
+            </li>
+        </ol>
+        <t>The more complex some specification is, the less likely any implementation of that specification is to be perfectly correct. Seeing as how perfect determinism is the chief objective of DeCAF, this is an extremely important consideration. This copy of the specification defines exactly how to create and unarchive a DeCAF archive, and it will never change as it would cease to produce identical files. With that looming over the head of the author, the specification is written with eternity in mind.</t>
+
+      </section>
+
+      <section>
+        <name>Terminology</name>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+          "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT
+          RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+          interpreted as described in BCP 14 <xref target="RFC2119"/>
+          <xref target="RFC8174"/> when, and only when, they appear in
+          all capitals, as shown here.</t>
+
+          <t>The term "byte" is used as a synonym for "octet". All multi-byte values listed in the document are encoded in the "little endian" encoding (least significant byte first).</t>
+      </section>
+    </section>
+
+    <section>
+      <name>Body [REPLACE]</name>
+      <t>Body text [REPLACE]</t>
+
+      <ol>
+        <li>Ordered list item [REPLACE/DELETE]</li>
+      </ol>
+
+      <ul>
+        <li>Bulleted list item [REPLACE/DELETE]</li>
+      </ul>
+
+      <dl newline="true">
+        <!-- Omit newline="true" if you want each definition to start on the same line as the corresponding term -->
+        <dt>First term: [REPLACE/DELETE]</dt>
+        <dd>Definition of the first term [REPLACE/DELETE]</dd>
+        <dt>Second term: [REPLACE/DELETE]</dt>
+        <dd>Definition of the second term [REPLACE/DELETE]</dd>
+      </dl>
+
+      <table>
+         <tbody>
+            <tr>
+               <th rowspan="15">Header</th>
+               <td rowspan="6">Archive Header (48 bytes)</td>
+               <td>Magic Number</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Archive Checksum</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Bundles Count</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Bundles Header Size</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Listings Count</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Listings Header Size</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td rowspan="7">Listings Header (repeated Listings Count times)</td>
+               <td>Total Size of This Listing</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>File Bundle Index</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>File Content Offset in Uncompressed Bundle</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>File Size</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>File Mode</td>
+               <td>uint16</td>
+            </tr>
+            <tr>
+               <td>Uncompressed File Checksum</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>File Path</td>
+               <td>UTF-8</td>
+            </tr>
+            <tr>
+               <td rowspan="2">Bundles Header (Repeated Bundles Count Times)</td>
+               <td>Start Offset of Compressed Bundle</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <td>Bundle Checksum</td>
+               <td>uint64</td>
+            </tr>
+            <tr>
+               <th>Content</th>
+               <td colspan="2">Compressed Bundles</td>
+               <td>Binary</td>
+            </tr>
+         </tbody>
+      </table>
+
+      <figure>
+        <name>Source [REPLACE]</name>
+        <sourcecode name="suggested filename [REPLACE/DELETE]" type="language [REPLACE/DELETE]" markers="true">
+          <![CDATA[
+source code goes here [REPLACE]
+          ]]>
+        </sourcecode>
+        <!-- [CHECK] markers="true" means that the rendered file will have <CODE BEGINS> and <CODE ENDS> added -->
+      </figure>
+
+      <figure>
+        <name>Diagram [REPLACE]</name>
+        <artset>
+          <artwork type="ascii-art" name="stream.txt">
+            <!-- [REPLACE/DELETE] name recommends a filename to use if the diagram is extracted -->
+            <![CDATA[
+ ascii-art diagram goes here [REPLACE]
+            ]]>
+          </artwork>
+        </artset>
+      </figure>
+    </section>
+
+    <section anchor="IANA">
+    <!-- All drafts are required to have an IANA considerations section. See RFC 8126 for a guide.-->
+      <name>IANA Considerations</name>
+      <t>This memo includes no request to IANA. [CHECK]</t>
+    </section>
+
+    <section anchor="Security">
+      <!-- All drafts are required to have a security considerations section. See RFC 3552 for a guide. -->
+      <name>Security Considerations</name>
+      <t>This document should not affect the security of the Internet. [CHECK]</t>
+    </section>
+
+    <!-- NOTE: The Acknowledgements and Contributors sections are at the end of this template -->
+  </middle>
+
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+        <name>Normative References</name>
+
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+        <!-- The recommended and simplest way to include a well known reference -->
+
+      </references>
+
+      <references>
+        <name>Informative References</name>
+
+        <reference anchor="exampleRefMin">
+        <!-- [REPLACE/DELETE] Example minimum reference -->
+          <front>
+            <title>Title [REPLACE]</title>
+            <author initials="Initials [REPLACE]" surname="Surname [REPLACE]">
+              <organization/>
+            </author>
+            <date year="2006"/>
+            <!-- [CHECK] -->
+          </front>
+        </reference>
+
+        <reference anchor="exampleRefOrg" target="http://www.example.com/">
+        <!-- [REPLACE/DELETE] Example reference written by an organization not a person -->
+          <front>
+            <title>Title [REPLACE]</title>
+            <author>
+              <organization>Organization [REPLACE]</organization>
+            </author>
+            <date year="1984"/>
+            <!-- [CHECK] -->
+          </front>
+        </reference>
+
+      </references>
+    </references>
+
+    <section>
+      <name>Appendix 1 [REPLACE/DELETE]</name>
+      <t>This becomes an Appendix [REPLACE]</t>
+    </section>
+
+    <section anchor="Acknowledgements" numbered="false">
+      <!-- [REPLACE/DELETE] an Acknowledgements section is optional -->
+      <name>Acknowledgements</name>
+      <t>This template uses extracts from templates written by Pekka Savola, Elwyn Davies and
+        Henrik Levkowetz. [REPLACE]</t>
+    </section>
+
+    <section anchor="Contributors" numbered="false">
+      <!-- [REPLACE/DELETE] a Contributors section is optional -->
+      <name>Contributors</name>
+      <t>Thanks to all of the contributors. [REPLACE]</t>
+      <!-- [CHECK] it is optional to add a <contact> record for some or all contributors -->
+    </section>
+
+ </back>
+</rfc>

@@ -17,7 +17,7 @@ categories = ["compression", "filesystem"]
 edition = "2021"
 
 [workspace]
-members = [ "decaf-capi","decaf-cli", "decaf-tar"]
+members = ["decaf-capi", "decaf-cli", "dtar"]
 
 [lib]
 name = "decaf"

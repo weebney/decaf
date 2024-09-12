@@ -15,10 +15,12 @@ This repository contains all of the official implementations, tools, and documen
 - `libdecaf/`;  an official DeCAF implementation in C99
 - `decaf-cli/`; the `df` command line utility for manipulating DeCAF archives
 - `doc/`; the official specification for DeCAF and its supporting documentation
-- `decaf-tar/`; a Rust library for very fast, deterministic bsdtar archiving/unarchiving used in `df`
+- `decaf-tar/`; a Rust library for very fast, deterministic POSIX tar archiving used in `df`
 
 ## Rationale
 
 Why do we need DeCAF?
 
 ## Limitations
+
+- DeCAF ignores symlinks entirely; symbolic links within an archive are an antipattern.
