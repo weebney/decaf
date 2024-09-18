@@ -1,3 +1,3 @@
-# dustar - Deterministic Tar
+# `dtar` - Deterministic Tar
 
-This package can be compiled as a binary or used as a libary. The binary is a drop-in replacement for `tar`.
+This package provides deterministic tar archiving.

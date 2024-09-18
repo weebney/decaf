@@ -17,7 +17,7 @@ categories = ["compression", "filesystem"]
 edition = "2021"
 
 [workspace]
-members = ["decaf-capi", "decaf-cli", "dtar"]
+members = ["decaf-capi", "decaf-cli", "decaf-nostd", "dtar"]
 
 [lib]
 name = "decaf"
@@ -25,7 +25,6 @@ path = "decaf/decaf.rs"
 
 [profile.release]
 strip = true
-overflow-checks = true
 lto = true
 
 [profile.dev]
@@ -37,11 +36,9 @@ opt-level = 3
 debug = true
 
 [dependencies]
+xxhash-rust = { version = "0.8.12", features = ["xxh3"] }
 zstd = "0.13.2"
 
-[dependencies.xxhash-rust]
-version = "0.8.12"
-features = ["xxh3"]
 
 [dev-dependencies]
 tempfile = "3.12.0"

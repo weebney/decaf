@@ -27,17 +27,17 @@ fn main() {
         let timer_overall = Instant::now();
         // todo: spinners
         println!("decaf: indexing files in {}", input);
-        let listings = decaf::create_listings_from_directory(Path::new(input)).unwrap();
+        let pre_archive = decaf::create_archive_from_directory(Path::new(input)).unwrap();
 
         println!(
             "decaf: indexed {} files in {:.2} sec",
-            listings.len(),
+            pre_archive.listings.len(),
             timer_overall.elapsed().as_secs_f32()
         );
 
         println!("decaf: creating archive for {}", input);
         let mut outfile = File::create(output.clone()).unwrap();
-        let bytes = listings.create_archive(&mut outfile).unwrap();
+        let bytes = pre_archive.archive_to_writer(&mut outfile).unwrap();
 
         println!(
             "decaf: archived {} as {} (wrote {:.2} mb) in {:.2} sec",
@@ -50,13 +50,13 @@ fn main() {
         let timer_overall = Instant::now();
         let mut infile = File::open(input).unwrap();
         println!("decaf: extracting files from archive {}", input);
-        let listings = unarchive_to_listings(&mut infile).unwrap();
+        let ex_archive = extract_from_reader(&mut infile).unwrap();
         println!(
             "decaf: extracted {} files in {:.2} sec",
-            listings.len(),
+            ex_archive.listings.len(),
             timer_overall.elapsed().as_secs_f32()
         );
-        listings.create_files(output.clone()).unwrap();
+        ex_archive.create_all_files(output.clone()).unwrap();
         println!(
             "decaf: unarchived {} to {} in {:.2} sec",
             input,
@@ -72,7 +72,7 @@ fn usage() {
 
 static USAGE: &str = "manipulate DeCAF archives
 
-Usage: df (ARCHIVE | DIRECTORY) [OUTPUT]
+Usage: df <ARCHIVE | DIRECTORY> [OUTPUT]
 
 Arguments:
     <ARCHIVE | DIRECTORY>  Path to the input archive (.df) or directory

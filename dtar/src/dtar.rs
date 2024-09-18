@@ -1,12 +1,12 @@
 use std::{
     ffi::OsStr,
-    fs::File,
+    fs::{self, File},
     io::{self, Write},
     os::unix::fs::MetadataExt,
     path::Path,
 };
 
-use decaf::Listing;
+use decaf::*;
 use flate2::Compression;
 
 /// Writes a deterministically gzipped deterministic POSIX tar (ustar) archive of the passed directory to the writer
@@ -44,18 +44,18 @@ pub fn create_tar<P: AsRef<Path>, W: Write>(
     let top_level_directory_perms = File::open(dir_path_as_path)?.metadata()?.mode();
 
     write_header(
-        Listing {
-            path: top_level_directory.clone().into_boxed_str(),
+        ArchivableListing {
+            relative_path: top_level_directory.clone().into_boxed_str(),
             permissions: top_level_directory_perms,
-            content_checksum: 0,
-            content: Default::default(),
+            file_size: 0,
+            literal_path: Default::default(),
         },
         writer,
     )?;
 
-    for mut listing in decaf::create_listings_from_directory(&directory_path)? {
-        listing.path = {
-            let mut path_string = listing.path.to_string();
+    for mut listing in create_archive_from_directory(&directory_path)?.listings {
+        listing.relative_path = {
+            let mut path_string = listing.relative_path.to_string();
             path_string.insert_str(0, top_level_directory.as_str());
             path_string.into_boxed_str()
         };
@@ -68,11 +68,18 @@ pub fn create_tar<P: AsRef<Path>, W: Write>(
     Ok(())
 }
 
-fn write_header<W: Write>(listing: Listing, writer: &mut W) -> Result<(), io::Error> {
+fn write_header<W: Write>(listing: ArchivableListing, writer: &mut W) -> Result<(), io::Error> {
     let mut header_buffer = [0u8; 512];
 
+    // get file content for listing if necessary
+    let mut listing_content = Vec::with_capacity(listing.file_size as usize);
+
+    if &listing.literal_path.to_str().unwrap() != &"" {
+        listing_content = fs::read(&listing.literal_path)?;
+    }
+
     // TODO: prefix paths with top level directory
-    let path_bytes = listing.path.as_bytes();
+    let path_bytes = listing.relative_path.as_bytes();
     let (name, prefix) = if path_bytes.len() <= 100 {
         (path_bytes, &[][..])
     } else {
@@ -90,7 +97,7 @@ fn write_header<W: Write>(listing: Listing, writer: &mut W) -> Result<(), io::Er
     // file size (12 bytes)
     write_octal(
         &mut header_buffer[124..136],
-        listing.content.len() as u64,
+        listing_content.len() as u64,
         11,
     );
 
@@ -119,10 +126,10 @@ fn write_header<W: Write>(listing: Listing, writer: &mut W) -> Result<(), io::Er
     header_buffer[155] = b' ';
 
     writer.write_all(&header_buffer)?;
-    writer.write_all(&listing.content)?;
+    writer.write_all(&listing_content)?;
 
     // pad file content to a multiple of 512 bytes
-    let padding = (512 - (listing.content.len() % 512)) % 512;
+    let padding = (512 - (listing_content.len() % 512)) % 512;
     writer.write_all(&vec![0u8; padding])?;
 
     Ok(())

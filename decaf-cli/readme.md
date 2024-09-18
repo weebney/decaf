@@ -1,4 +1,4 @@
-# DeCAF command line utility
+# `dar`, the DeCAF command line utility
 
 ## TAR Mode
 

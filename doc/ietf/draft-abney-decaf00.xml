@@ -162,8 +162,8 @@
       <table>
          <tbody>
             <tr>
-               <th rowspan="15">Header</th>
-               <td rowspan="6">Archive Header (48 bytes)</td>
+               <td rowspan="15">Header</td>
+               <td rowspan="6">Archive Header-Block (48 bytes)</td>
                <td>Magic Number</td>
                <td>uint64</td>
             </tr>
@@ -188,7 +188,7 @@
                <td>uint64</td>
             </tr>
             <tr>
-               <td rowspan="7">Listings Header (repeated Listings Count times)</td>
+               <td rowspan="7">Listings Header-Block (repeated Listings Count times)</td>
                <td>Total Size of This Listing</td>
                <td>uint64</td>
             </tr>
@@ -214,10 +214,10 @@
             </tr>
             <tr>
                <td>File Path</td>
-               <td>UTF-8</td>
+               <td>String</td>
             </tr>
             <tr>
-               <td rowspan="2">Bundles Header (Repeated Bundles Count Times)</td>
+               <td rowspan="2">Bundles Header-Block (Repeated Bundles Count Times)</td>
                <td>Start Offset of Compressed Bundle</td>
                <td>uint64</td>
             </tr>
@@ -226,8 +226,7 @@
                <td>uint64</td>
             </tr>
             <tr>
-               <th>Content</th>
-               <td colspan="2">Compressed Bundles</td>
+               <td colspan="3">Compressed Bundles Content</td>
                <td>Binary</td>
             </tr>
          </tbody>
