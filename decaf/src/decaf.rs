@@ -10,7 +10,7 @@ use std::str::from_utf8;
 use xxhash_rust::xxh3::xxh3_64 as xxh3;
 use zstd::stream as zstd;
 
-static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"iamdecaf");
+static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"notdecaf");
 
 // TODO: use .map_err() for all the ?s
 

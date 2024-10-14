@@ -7,3 +7,5 @@ tags
 examples/debug.rs
 tmp/
 *.DS_Store*
+
+doc/ietf/

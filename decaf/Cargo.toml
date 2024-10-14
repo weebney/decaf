@@ -1,15 +1,15 @@
 [package]
 name = "decaf"
-version = "0.0.1"
+version = "0.0.0"
 authors = [
     "The DeCAF Project Developers",
     "William Abney <weebney@freeassn.org>",
 ]
 license = "MIT OR Apache-2.0"
 readme = "readme.md"
-repository = "https://github.com/decafwg/decaf"
+repository = "https://github.com/weebney/decaf"
 documentation = "https://docs.rs/decaf"
-homepage = "https://github.com/decafwg/decaf"
+homepage = "https://github.com/weebney/decaf"
 description = """
 The Deterministic Compressed Archive Format (DeCAF)
 """

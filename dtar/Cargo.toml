@@ -20,6 +20,6 @@ edition = "2021"
 path = "src/dtar.rs"
 
 [dependencies]
-decaf = { path = "../decaf", version = "*" }
+decaf = { path = "../decaf", version = "0" }
 flate2 = "1.0.33"
 tar = "0.4.41"
