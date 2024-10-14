@@ -21,7 +21,7 @@ fn archive_and_unarchive() {
     .unwrap();
 
     let now = Instant::now();
-    let listings_result = create_archive_from_directory(Path::new("../go/"));
+    let listings_result = create_archive_from_directory(Path::new("../../go/"));
     assert!(listings_result.is_ok());
     println!("gather  {}", now.elapsed().as_millis());
 

@@ -17,4 +17,4 @@ categories = ["compression", "filesystem"]
 edition = "2021"
 
 [dependencies]
-decaf = { path = "..", version = "0" }
+decaf = { path = "../decaf", version = "*" }

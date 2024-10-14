@@ -10,7 +10,7 @@ use std::str::from_utf8;
 use xxhash_rust::xxh3::xxh3_64 as xxh3;
 use zstd::stream as zstd;
 
-static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"notdecaf");
+static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"iamdecaf");
 
 // TODO: use .map_err() for all the ?s
 
@@ -123,7 +123,7 @@ impl ArchivableArchive {
                 Vec::with_capacity(self.listings[listing_idx].file_size as usize);
             let mut content_checksum = 0;
 
-            if &self.listings[listing_idx].literal_path.to_str().unwrap() != &"" {
+            if self.listings[listing_idx].literal_path.to_str().unwrap() != "" {
                 listing_content = fs::read(&self.listings[listing_idx].literal_path)?;
                 content_checksum = xxh3(&listing_content);
             }
@@ -144,12 +144,12 @@ impl ArchivableArchive {
             listing_constructed.extend_from_slice(&listing_file_size.to_le_bytes());
             listing_constructed.extend_from_slice(&listing_permissions.to_le_bytes());
             listing_constructed.extend_from_slice(&listing_checksum.to_le_bytes());
-            listing_constructed.extend_from_slice(&listing_path);
+            listing_constructed.extend_from_slice(listing_path);
 
             binary_listings.push(listing_constructed);
 
             current_bundle_offset += listing_content.len();
-            binary_bundles[bundle_idx].extend(listing_content.drain(..));
+            binary_bundles[bundle_idx].append(&mut listing_content);
 
             listing_idx += 1;
             // check for listing exhaustion
@@ -545,7 +545,7 @@ impl ExtractedArchive {
     ) -> Result<usize, io::Error> {
         let mut sum: usize = 0;
         for listing in &self.listings {
-            sum += self.create_file(&listing, &output_directory_path)?;
+            sum += self.create_file(listing, &output_directory_path)?;
         }
         Ok(sum)
     }

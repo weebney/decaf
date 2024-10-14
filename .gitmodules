@@ -1,6 +1,0 @@
-[submodule "libdecaf/external/xxHash"]
-	path = libdecaf/external/xxHash
-	url = https://github.com/Cyan4973/xxHash
-[submodule "libdecaf/external/zstd"]
-	path = libdecaf/external/zstd
-	url = https://github.com/facebook/zstd
