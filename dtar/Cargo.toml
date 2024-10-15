@@ -1,6 +1,6 @@
 [package]
 name = "dtar"
-version = "1.0.0"
+version = "0.0.0"
 authors = [
     "The DeCAF Project Developers",
     "William Abney <weebney@freeassn.org>",

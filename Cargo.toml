@@ -1,5 +1,5 @@
 [workspace]
-members = ["decaf", "decaf-cli", "dtar"]
+members = ["decaf", "dar", "dtar"]
 resolver = "2"
 
 [profile.release]
