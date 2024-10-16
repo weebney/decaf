@@ -89,8 +89,8 @@ Listings are composed in the following manner:
 | the index of the bundle which contains the content of this listing | uint64 |
 | the offset (in # of bytes) within the bundle where the content of this listing begins | uint64 |
 | the size (in # of bytes) of the content | uint64 |
-| the mode of this listing | uint8 |
 | the checksum of the listing content | uint64 |
+| the mode of this listing | uint8 |
 | the number of bytes in the path of this listing | uint16 |
 | the path of the listing | string |
 
@@ -108,6 +108,10 @@ DeCAF archives have no conception of users, groups, or permissions. All normal, 
 Links which point outside the scope of the archive can not be represented, so they can not be archived.
 
 For example, during extraction in the reference implementation of DeCAF (for UNIX-like systems), normal files are always given a mode on the filesystem of `100644`, executable files are given `100755`, and links are given `120000`, mimicing the functionality of `git`[^1]. During archiving, only the permissions for the owner are read; if the file is not readable or writable by the owner, it's skipped.
+
+### Path
+
+a relative path that is lexically equivalent to targpath when joined to basepath with an intervening separator.
 
 
 ### Ordering of Listings

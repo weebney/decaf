@@ -1,5 +1,5 @@
 [package]
-name = "dar"
+name = "decaf-cli"
 version = "0.1.0"
 authors = [
     "The DeCAF Project Developers",
@@ -15,6 +15,10 @@ The Deterministic Compressed Archive Format (DeCAF) command-line interface
 """
 categories = ["compression", "filesystem"]
 edition = "2021"
+
+[[bin]]
+name = "decaf"
+path = "src/main.rs"
 
 [dependencies]
 decaf = { path = "../decaf", version = "*" }

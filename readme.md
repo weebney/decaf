@@ -16,16 +16,12 @@ The Deterministic Compressed Archive Format (DeCAF) is an archive file format th
 This repository contains all of the official implementations, tools, and documentation related to DeCAF:
 
 - [`decaf/`](./decaf/); the official DeCAF implementation in Rust
-- [`decaf-cli/`](./decaf-cli/); the `dar` command line utility for manipulating DeCAF archives
-- [`dtar/`](./dtar/); a Rust library for very fast, deterministic POSIX tar archiving used in `dar`
-- [`doc/`](./doc/); Official specification for DeCAF and its supporting documentation
-
-## Rationale
-
-Why do we need DeCAF?
+- [`decaf-cli/`](./decaf-cli/); the `decaf` command line utility for manipulating DeCAF archives
+- [`decaf-reference/`](./decaf-reference/); the Go reference implementation of the DeCAF specification
+- [`doc/`](./doc/); specification for DeCAF and its supporting documentation
+- [`dtar/`](./dtar/); a Rust library for very fast, deterministic POSIX tar archiving used in `decaf`
 
 ## Planned Work
 
 - Official DeCAF implementation in C
 - Stable C-api for the Rust implementation (for binding to higher level languages)
-- Official DeCAF implementations in Go, Java, and C#

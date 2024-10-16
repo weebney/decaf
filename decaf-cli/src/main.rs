@@ -72,7 +72,7 @@ fn usage() {
 
 static USAGE: &str = "manipulate DeCAF archives
 
-Usage: df <ARCHIVE | DIRECTORY> [OUTPUT]
+Usage: decaf <ARCHIVE | DIRECTORY> [OUTPUT]
 
 Arguments:
     <ARCHIVE | DIRECTORY>  Path to the input archive (.df) or directory
