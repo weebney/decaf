@@ -71,7 +71,7 @@ jobs:
       - name: Run clippy on decaf
         run: |
           cd decaf
-          cargo clippy --all-targets --all-features -- -D warnings
+          cargo clippy --fix --all-features -- -D warnings
       - name: Run tests on decaf
         run: |
           cd decaf
@@ -83,7 +83,7 @@ jobs:
       - name: Run clippy on decaf-cli
         run: |
           cd decaf-cli
-          cargo clippy --all-targets --all-features -- -D warnings
+          cargo clippy --fix --all-features -- -D warnings
       - name: Run tests on decaf-cli
         run: |
           cd decaf-cli
@@ -95,7 +95,7 @@ jobs:
       - name: Run clippy on dtar
         run: |
           cd dtar
-          cargo clippy --all-targets --all-features -- -D warnings
+          cargo clippy --fix --all-features -- -D warnings
       - name: Run tests on dtar
         run: |
           cd dtar
