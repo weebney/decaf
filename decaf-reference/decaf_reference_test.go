@@ -13,17 +13,20 @@ func TestEndToEnd(t *testing.T) {
 	tempDir, err := os.MkdirTemp("", "decaf-TestEndToEnd-*")
 	if err != nil {
 		t.Errorf("setting up temporary directory failed: %s", err)
+		t.FailNow()
 	}
 	defer os.RemoveAll(tempDir)
 
 	archive, err := Archive("./testdata/toybox-0.8.11/")
 	if err != nil {
 		t.Errorf("archiving failed: %s", err)
+		t.FailNow()
 	}
 
 	err = Unarchive(archive, tempDir)
 	if err != nil {
 		t.Errorf("unarchiving failed: %s", err)
+		t.FailNow()
 	}
 }
 
@@ -31,19 +34,23 @@ func TestArchivingAllCases(t *testing.T) {
 	want, err := os.ReadFile("./testdata/all_cases_known_good.df")
 	if err != nil {
 		t.Errorf("reading known_good.df failed: %s", err)
+		t.FailNow()
 	}
 
 	got, err := Archive("./testdata/all_cases/")
 	if err != nil {
 		t.Errorf("archiving failed: %s", err)
+		t.FailNow()
 	}
 
 	if len(want) != len(got) {
 		t.Errorf("got and want are not same length: len(got) = %d, len(want) = %d", len(got), len(want))
+		t.FailNow()
 	}
 	for i := range got {
 		if got[i] != want[i] {
-			t.Errorf("got != want")
+			t.Logf("got != want at byte %d", i)
+			t.FailNow()
 		}
 	}
 }
@@ -52,26 +59,31 @@ func TestUnarchivingAllCases(t *testing.T) {
 	tempDir, err := os.MkdirTemp("", "decaf-TestUnarchivingAllCases-*")
 	if err != nil {
 		t.Errorf("setting up temporary directory failed: %s", err)
+		t.FailNow()
 	}
 	defer os.RemoveAll(tempDir)
 
 	archive, err := os.ReadFile("./testdata/all_cases_known_good.df")
 	if err != nil {
 		t.Errorf("reading test archive from testdata failed: %s", err)
+		t.FailNow()
 	}
 
 	err = Unarchive(archive, tempDir)
 	if err != nil {
 		t.Errorf("unarchiving failed: %s", err)
+		t.FailNow()
 	}
 
 	wants, err := getDiffInfos("./testdata/all_cases_known_good_extracted/")
 	if err != nil {
 		t.Errorf("failed to getDiffInfos for wants: %s", err)
+		t.FailNow()
 	}
 	gots, err := getDiffInfos(tempDir)
 	if err != nil {
 		t.Errorf("failed to getDiffInfos for gots: %s", err)
+		t.FailNow()
 	}
 
 	if len(wants) != len(gots) {
@@ -82,6 +94,7 @@ func TestUnarchivingAllCases(t *testing.T) {
 		for _, got := range gots {
 			t.Errorf("got has %s", got.path)
 		}
+		t.FailNow()
 	}
 
 	for i := range wants {
@@ -157,6 +170,7 @@ func BenchmarkArchiving(b *testing.B) {
 	_, err := Archive("./testdata/toybox-0.8.11/")
 	if err != nil {
 		b.Errorf("encountered an error while archiving toybox corpus: %s", err)
+		b.FailNow()
 	}
 	b.StopTimer()
 }
@@ -165,12 +179,14 @@ func BenchmarkUnarchiving(b *testing.B) {
 	tempDir, err := os.MkdirTemp("", "decaf-BenchmarkUnarchiving-*")
 	if err != nil {
 		b.Errorf("setting up temporary directory failed: %s", err)
+		b.FailNow()
 	}
 	defer os.RemoveAll(tempDir)
 
 	archive, err := os.ReadFile("./testdata/toybox-0.8.11.df")
 	if err != nil {
-		b.Errorf("reading toybox.df failed: %s", err)
+		b.Errorf("reading `toybox-0.8.11.df` failed: %s", err)
+		b.FailNow()
 	}
 
 	b.ResetTimer()
