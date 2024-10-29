@@ -102,7 +102,7 @@ func Archive(inputDirectoryPath string) ([]byte, error) {
 				return fmt.Errorf("failed to read directory `%s`: %s", path, err)
 			}
 			// If this directory has children, skip it
-			if len(subEntries) > 1 {
+			if len(subEntries) > 0 {
 				return nil
 			}
 			listingMode = ModeBareDir // ModeBareDir == 3

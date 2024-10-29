@@ -90,10 +90,10 @@ func TestUnarchivingAllCases(t *testing.T) {
 	if len(wants) != len(gots) {
 		t.Errorf("gots and wants are not same length: len(gots) = %d, len(wants) = %d", len(gots), len(wants))
 		for _, want := range wants {
-			t.Errorf("want has %s", want.path)
+			t.Errorf("want has\t%s", want.path)
 		}
 		for _, got := range gots {
-			t.Errorf("got has %s", got.path)
+			t.Errorf("got has\t%s", got.path)
 		}
 		t.FailNow()
 	}
@@ -130,7 +130,6 @@ func getDiffInfos(dirPath string) ([]diffInfo, error) {
 		if err != nil {
 			return err
 		}
-
 		if path == dirPath {
 			return nil
 		}
