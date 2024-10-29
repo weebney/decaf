@@ -48,6 +48,11 @@ jobs:
         run: |
           cd decaf-reference
           go vet ./...
+      - name: Run go tests
+        if: always()
+        run: |
+          cd decaf-reference/
+          go test ./...
 
   rust-qc:
     name: Rust Static Analysis
