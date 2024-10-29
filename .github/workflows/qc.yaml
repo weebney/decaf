@@ -2,9 +2,9 @@ name: Quality Control
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [master]
     paths-ignore:
-      - '**/*.md'
+      - "**/*.md"
 
 permissions:
   contents: write
@@ -30,10 +30,12 @@ jobs:
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
       - name: Fix formatting with gofumpt
         run: |
-          gofumpt -l -w decaf-reference/
+          cd decaf-reference/
+          gofumpt -l -w .
       - name: Run staticcheck
         run: |
-          staticcheck ./decaf-reference/...
+          cd decaf-reference/
+          staticcheck ./...
       - name: Run go vet
         run: |
           cd decaf-reference
@@ -41,7 +43,8 @@ jobs:
       - name: Run golint
         run: |
           go install golang.org/x/lint/golint@latest
-          golint -set_exit_status ./decaf-reference/...
+          cd decaf-reference
+          golint -set_exit_status ./...
 
   rust-qc:
     name: Rust Static Analysis
@@ -63,39 +66,39 @@ jobs:
         uses: Swatinem/rust-cache@v2
       - name: Fix formatting decaf
         run: |
-          cd decaf/decaf
+          cd decaf
           cargo fmt --all
       - name: Run clippy on decaf
         run: |
-          cd decaf/decaf
+          cd decaf
           cargo clippy --all-targets --all-features -- -D warnings
       - name: Run tests on decaf
         run: |
-          cd decaf/decaf
+          cd decaf
           cargo test --all-features
       - name: Fix formatting decaf-cli
         run: |
-          cd decaf/decaf-cli
+          cd decaf-cli
           cargo fmt --all
       - name: Run clippy on decaf-cli
         run: |
-          cd decaf/decaf-cli
+          cd decaf-cli
           cargo clippy --all-targets --all-features -- -D warnings
       - name: Run tests on decaf-cli
         run: |
-          cd decaf/decaf-cli
+          cd decaf-cli
           cargo test --all-features
       - name: Fix formatting dtar
         run: |
-          cd decaf/dtar
+          cd dtar
           cargo fmt --all
       - name: Run clippy on dtar
         run: |
-          cd decaf/dtar
+          cd dtar
           cargo clippy --all-targets --all-features -- -D warnings
       - name: Run tests on dtar
         run: |
-          cd decaf/dtar
+          cd dtar
           cargo test --all-features
 
   commit:
