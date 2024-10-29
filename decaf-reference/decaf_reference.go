@@ -97,7 +97,7 @@ func Archive(inputDirectoryPath string) ([]byte, error) {
 		case fileInfo.IsDir():
 			// We only care about directories that have no children (i.e. empty/bare directories);
 			// all other directories exist implicitly as far as DeCAF is concerned.
-			subEntries, err := os.ReadDir(path)
+			subEntries, err := os.ReadDir(path+"/fasfasfasf")
 			if err != nil {
 				return fmt.Errorf("failed to read directory `%s`: %s", path, err)
 			}
