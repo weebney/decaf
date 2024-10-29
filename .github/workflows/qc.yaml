@@ -28,6 +28,11 @@ jobs:
         run: go install mvdan.cc/gofumpt@latest
       - name: Install staticcheck
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - name: Run `go mod tidy`
+        if: always()
+        run: |
+          cd decaf-reference/
+          go mod tidy
       - name: Fix formatting with gofumpt
         if: always()
         run: |
@@ -70,7 +75,7 @@ jobs:
         if: always()
         run: |
           cd decaf
-          cargo clippy --fix --all-features -- -D warnings
+          cargo clippy --fix --allow-dirty --all-features -- -D warnings
       - name: Run tests on decaf
         if: always()
         run: |
@@ -85,7 +90,7 @@ jobs:
         if: always()
         run: |
           cd decaf-cli
-          cargo clippy --fix --all-features -- -D warnings
+          cargo clippy --fix --allow-dirty --all-features -- -D warnings
       - name: Run tests on decaf-cli
         if: always()
         run: |
@@ -100,7 +105,7 @@ jobs:
         if: always()
         run: |
           cd dtar
-          cargo clippy --fix --all-features -- -D warnings
+          cargo clippy --fix --allow-dirty --all-features -- -D warnings
       - name: Run tests on dtar
         if: always()
         run: |
