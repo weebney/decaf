@@ -1,0 +1,132 @@
+name: Quality Control
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  go-qc:
+    name: Go Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Install gofumpt
+        run: go install mvdan.cc/gofumpt@latest
+
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+      - name: Fix formatting with gofumpt
+        run: |
+          gofumpt -l -w decaf-reference/
+
+      - name: Run staticcheck
+        run: |
+          staticcheck ./decaf-reference/...
+
+      - name: Run go vet
+        run: |
+          cd decaf-reference
+          go vet ./...
+
+      - name: Run golint
+        run: |
+          go install golang.org/x/lint/golint@latest
+          golint -set_exit_status ./decaf-reference/...
+
+  rust-qc:
+    name: Rust Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy, rustfmt
+          override: true
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Fix formatting decaf
+        run: |
+          cd decaf/decaf
+          cargo fmt --all
+
+      - name: Run clippy on decaf
+        run: |
+          cd decaf/decaf
+          cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests on decaf
+        run: |
+          cd decaf/decaf
+          cargo test --all-features
+
+      - name: Fix formatting decaf-cli
+        run: |
+          cd decaf/decaf-cli
+          cargo fmt --all
+
+      - name: Run clippy on decaf-cli
+        run: |
+          cd decaf/decaf-cli
+          cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests on decaf-cli
+        run: |
+          cd decaf/decaf-cli
+          cargo test --all-features
+
+      - name: Fix formatting dtar
+        run: |
+          cd decaf/dtar
+          cargo fmt --all
+
+      - name: Run clippy on dtar
+        run: |
+          cd decaf/dtar
+          cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests on dtar
+        run: |
+          cd decaf/dtar
+          cargo test --all-features
+
+  commit:
+    name: Commit quality control changes
+    needs: [go-checks, rust-checks]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'decaf-qc[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git diff --quiet || (git add . && git commit -m "all: automated quality control" && git push)
