@@ -10,8 +10,9 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-	"github.com/DataDog/zstd"
+
 	"github.com/bytedance/gopkg/util/xxhash3"
+	"github.com/klauspost/compress/zstd"
 )
 
 type Listing struct {
@@ -46,7 +47,7 @@ type Listing struct {
 	// Everything above here is information written directly into the header;
 	// below, is the content, which is written into a bundle and compressed.
 
-	// The binary fileContent of the file, which we'll write into a bundle
+	// The literal content of the file, which we'll write into a bundle
 	fileContent []byte
 }
 
@@ -245,17 +246,22 @@ func Archive(inputDirectoryPath string) ([]byte, error) {
 	}
 
 	// Generate the bundle header info and compress the bundles
+	// We're going to setup a single compressor to use between iterations
+	// We have to disable concurrency in this implementation of zstd to get deterministic output
+	compressor, err := zstd.NewWriter(nil, zstd.WithEncoderConcurrency(1))
+	if err != nil {
+		return nil, fmt.Errorf("failed to setup compressor: %s", err)
+	}
 	bundles := []*Bundle{}
 	currentOffsetInDataSection := uint64(0)
-	for i, uncompressedData := range uncompressedBundleContents {
+	for _, uncompressedData := range uncompressedBundleContents {
 		// Get the checksum
 		uncompressedChecksum := xxhash3.Hash(uncompressedData)
 
 		// Then, we can compress the bundle
-		compressedBundleData, err := zstd.CompressLevel(nil, uncompressedData, 3)
-		if err != nil {
-			return nil, fmt.Errorf("failed to compress bundle with index %v: %s", i, err)
-		}
+		compressedBundleData := compressor.EncodeAll(uncompressedData, []byte{})
+		// Because we're reusing this, we need to reset it
+		compressor.Reset(nil)
 
 		// Now, we can construct a bundle header struct for the bundle
 		bundleHeaderEntry := Bundle{
@@ -368,7 +374,11 @@ func Unarchive(archive []byte, outputDirectoryPath string) error {
 
 		bundleCompressedData := dataSection[bundleOffsetInDataSection : bundleOffsetInDataSection+bundleCompressedSize]
 
-		bundleData, err := zstd.Decompress([]byte{}, bundleCompressedData)
+		decompressor, err := zstd.NewReader(nil)
+		if err != nil {
+			panic("failed to setup decompressor")
+		}
+		bundleData, err := decompressor.DecodeAll(bundleCompressedData, []byte{})
 		if err != nil {
 			panic("failed to decompress bundle")
 		}
