@@ -21,4 +21,4 @@ name = "decaf"
 path = "src/main.rs"
 
 [dependencies]
-decaf = { path = "../decaf", version = "*" }
+decaf = { path = "../decaf-rs", version = "*" }
