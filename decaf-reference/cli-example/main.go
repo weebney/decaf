@@ -69,9 +69,13 @@ func ArchiveDirectoryToFile(directoryPath string, outputFilePath string) error {
 	}
 
 	outFile, err := os.Create(outputFilePath)
-	_, err = outFile.Write(archive)
 	if err != nil {
 		return fmt.Errorf("failed to create output file `%s`: %s", outputFilePath, err)
+	}
+
+	_, err = outFile.Write(archive)
+	if err != nil {
+		return fmt.Errorf("failed to write to output file `%s`: %s", outputFilePath, err)
 	}
 
 	return nil
