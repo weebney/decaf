@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -96,6 +97,11 @@ func TestUnarchivingAllCases(t *testing.T) {
 		}
 		t.FailNow()
 	}
+
+	// we have to sort these
+	slices.SortFunc(gots, func(a, b diffInfo) int {
+		return strings.Compare(a.path, b.path)
+	})
 
 	for i := range wants {
 		if wants[i].path != gots[i].path {
