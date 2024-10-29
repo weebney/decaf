@@ -9,8 +9,9 @@ use std::str::from_utf8;
 
 use xxhash_rust::xxh3::xxh3_64 as xxh3;
 use zstd::stream as zstd;
+use zstd_safe::zstd_sys::{ZSTD_dParameter, ZSTD_MAGIC_SKIPPABLE_START};
 
-static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"notdecaf");
+static MAGIC_NUMBER: u64 = u64::from_le_bytes(*b"iamdecaf");
 
 // TODO: use .map_err() for all the ?s
 
@@ -102,7 +103,7 @@ pub struct ArchivableArchive {
 
 impl ArchivableArchive {
     fn create_archive<W: Write>(&self, writer: &mut W) -> Result<usize, io::Error> {
-        let target_bundle_size = 1000 * 1000 * 10; // 10mb target bundle size
+        let target_bundle_size = 10 * (1024 * 1024); // 10mb target bundle size
 
         let mut binary_listings: Vec<Vec<u8>> = Vec::new();
         let mut binary_bundles: Vec<Vec<u8>> = Vec::new();
@@ -171,24 +172,19 @@ impl ArchivableArchive {
         let mut compressed_bundle_current_offset: u64 =
             (listing_section_total_length + 40 + (binary_bundles.len() * 8 * 3)) as u64;
 
+        let mut i = 0;
         for bundle in binary_bundles {
             let compressed_bundle_offset = compressed_bundle_current_offset;
 
             let bundle_checksum = xxh3(&bundle);
 
-            // setup the zstd encoder
-            let mut zstd_enc = zstd::Encoder::new(Vec::with_capacity(bundle.len()), 3)?;
-            zstd_enc.set_pledged_src_size(Some(bundle.len() as u64))?;
-            zstd_enc.include_checksum(false)?;
-            zstd_enc.include_contentsize(false)?;
-
-            // compress the bundle
-            zstd_enc.write_all(&bundle)?;
-            let compressed_bundle = zstd_enc.finish()?;
-            compressed_bundles.push(compressed_bundle.clone());
-
-            // size
+            // compress with zstd
+            let mut compressed_bundle = Vec::new();
+            zstd::copy_encode(bundle.as_slice(), &mut compressed_bundle, 3)?;
             let compressed_bundle_size = compressed_bundle.len() as u64;
+            compressed_bundles.push(compressed_bundle);
+
+            println!("{}, {} {}", i, bundle.len(), compressed_bundle_size);
 
             // increment offset
             compressed_bundle_current_offset += compressed_bundle_size;
@@ -196,6 +192,7 @@ impl ArchivableArchive {
             bundle_section.write_all(&compressed_bundle_offset.to_le_bytes())?;
             bundle_section.write_all(&compressed_bundle_size.to_le_bytes())?;
             bundle_section.write_all(&bundle_checksum.to_le_bytes())?;
+            i += 1;
         }
 
         // --------------------------------------------
@@ -222,8 +219,8 @@ impl ArchivableArchive {
         archive_buffer.append(&mut bundle_section);
 
         // write compressed block
-        for mut compressed_bundle in compressed_bundles.drain(..) {
-            archive_buffer.append(&mut compressed_bundle);
+        for compressed_bundle in compressed_bundles.drain(..) {
+            archive_buffer.write_all(&compressed_bundle)?;
         }
 
         // --------------------------------------------
@@ -448,9 +445,11 @@ impl ExtractedArchive {
                     ..compressed_bundle_offset as usize + compressed_bundle_size as usize],
             )?;
 
-            let mut zstd_dec = zstd::Decoder::new(decompression_buffer.as_slice())?;
             let mut uncompressed_bundle_content = Vec::new();
-            zstd_dec.read_to_end(&mut uncompressed_bundle_content)?;
+            zstd::copy_decode(
+                decompression_buffer.as_slice(),
+                &mut uncompressed_bundle_content,
+            )?;
 
             // verify bundle checksum
             if xxh3(&uncompressed_bundle_content) != uncompressed_bundle_checksum {

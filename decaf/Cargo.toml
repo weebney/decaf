@@ -19,6 +19,7 @@ edition = "2021"
 [dependencies]
 xxhash-rust = { version = "0.8.12", features = ["xxh3"] }
 zstd = "0.13.2"
+zstd-safe = "7.2.1"
 
 [dev-dependencies]
 tempfile = "3.12.0"
